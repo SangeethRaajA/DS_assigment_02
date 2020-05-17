@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Event</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+<div class="jumbotron">
+
+  <h1 class="text-bold text-center">{{title}}</h1>
+
+  <div class="row" >
+    <div class="col-md-1"></div>
+
+<!--    calendar-->
+    <div class="col-md-6 " style="height:50%; width: 70%" >
+      <div class="jumbotron p-3 mb-2 bg-white text-dark"  >
+        <div *ngFor="let event of EventData;let lst = last">
+        <full-calendar *ngIf="lst"
+          defaultView="dayGridMonth"
+          [plugins]="calendarPlugins"
+          [weekends]="true"
+          [events]="EventData"
+          ></full-calendar>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+
+<!--      add event-->
+      <div>
+        <div class="alert alert-success alert-dismissable" *ngIf="msg">
+          <a href="#" class="close" (click)="clickMe()"></a>
+          {{msg}}
+        </div>
+        <button data-toggle="collapse" data-target="#demo_1" class="btn btn-dark" >Add Event</button>
+        <div id="demo_1" class="collapse"><br>
+        <form class="jumbotron p-3 mb-2 bg-info">
+          <h5>Enter Event Details</h5>
+          <div class="form-group ">
+            <label class="control-label" for="date">Select Date </label><br>
+            <input required class="form-control" type="date" id="date" name="date" [(ngModel)]="model.date" >
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" for="time">Select Time </label><br>
+            <input required class="form-control" type="time" id="time" name="time" [(ngModel)]="model.time" >
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" for="title">Enter Event </label><br>
+            <input required class="form-control" type="text" id="title" name="title" [(ngModel)]="model.title" placeholder="Enter event">
+          </div>
+          <button (click)="AddEvent()" [disabled]="!model.date ||!model.time || !model.title" type="submit" class="btn btn-success"> Add </button>
+  <!--        <button (click)="AddEvent()" [disabled]="!model.title || model.date" ] type="submit" class="btn btn-success"> Add </button>-->
+        </form>
+        </div>
+      </div>
+      <br>
+
+<!--      display next event-->
+      <div class="jumbotron p-3 mb-2 bg-info">
+        <h4>Next Event </h4>
+        <div class="modal-body ">
+          <div *ngFor="let event of EventData;let i = first">
+            <table *ngIf="i">
+              <tr> <h5>Date :  {{event.date}}</h5></tr>
+              <tr> <h5>Time : {{event.time}}</h5></tr>
+              <tr> <h5>Event : {{event.title}}</h5></tr><br>
+              <tr>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <br>
+
+
+    </div>
+  </div>
+  <br>
+  <div class="row">
+<!--    diplay event table-->
+    <div class="col-md-8">
+      <table class="table">
+        <thead class="thead-dark">
+        <tr>
+
+          <th scope="col">Date</th>
+          <th scope="col">Time</th>
+          <th scope="col">Event</th>
+          <th scope="col">Edit</th>
+          <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tr *ngFor="let event of EventData;let i=index">
+          <td>{{event.date}}</td>
+          <td>{{event.time}}</td>
+          <td>{{event.title}}</td>
+          <td><button data-toggle="collapse" data-target="#demo"  (click)="EditEvent(i)" type="submit" class="btn btn-warning">Edit</button></td>
+          <td><button (click)="DeleteEvent(i)" type="submit" class="btn btn-danger">Delete</button></td>
+        </tr>
+      </table>
+    </div>
+
+<!--    display update form-->
+    <div class="col-md-4">
+      <div class="alert alert-success alert-dismissable" *ngIf="msg2">
+        <a href="#" class="close" (click)="clickMe2()"></a>
+        {{msg2}}
+      </div>
+      <div class="alert alert-danger alert-dismissable" *ngIf="msg3">
+        <a href="#" class="close" (click)="clickMe3()"></a>
+        {{msg3}}
+      </div>
+      <!--      Update Event-->
+      <div id="demo" class="collapse">
+
+        <form class="jumbotron p-3 mb-2 bg-info">
+
+          <h5>Update Event Details</h5>
+
+          <div class="form-group ">
+            <label class="control-label" for="date">Select Date </label><br>
+            <input class="form-control" type="date" id="date" name="date" [(ngModel)]="model2.date" required>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" for="time">Select Time </label><br>
+            <input class="form-control" type="time" id="time" name="time" [(ngModel)]="model2.time" required>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label">Enter Event </label><br>
+            <input class="form-control" type="text" id="title" name="title" [(ngModel)]="model2.title" placeholder="Enter event" required>
+          </div>
+          <button (click)="UpdateEvent()" [disabled]="!model2.date ||!model2.time || !model2.title" type="submit" class="btn btn-success"> Update </button>
+
+        </form>
+      </div></div>
+  </div>
+</div>
+</body>
+</html>
